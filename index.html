@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rocket-guard</title>
+  <link rel="preconnect" href="https://api.fontshare.com" />
+  <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@500,700&f[]=satoshi@400,500,700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+  <style>
+    :root {
+      --font-display: 'Cabinet Grotesk', 'Inter', sans-serif;
+      --font-body: 'Satoshi', 'Inter', sans-serif;
+      --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+      --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+      --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+      --text-lg: clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
+      --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2.2rem);
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-5: 1.25rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
+      --radius-full: 9999px;
+      --color-bg: #050814;
+      --color-surface: rgba(10, 18, 34, 0.72);
+      --color-surface-2: rgba(19, 30, 54, 0.76);
+      --color-border: rgba(128, 181, 255, 0.18);
+      --color-text: #eef4ff;
+      --color-text-muted: #9fb4d8;
+      --color-primary: #7bc2ff;
+      --color-danger: #ff8b6a;
+      --color-gold: #ffd36f;
+      --shadow-lg: 0 18px 42px rgba(0, 0, 0, 0.38);
+      --transition: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; }
+    body {
+      overflow: hidden;
+      background: radial-gradient(circle at top, rgba(68, 122, 255, 0.12), transparent 35%), #050814;
+      color: var(--color-text);
+      font-family: var(--font-body);
+    }
+
+    video {
+      position: absolute;
+      right: 1rem;
+      bottom: 1rem;
+      width: min(24vw, 240px);
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-lg);
+      transform: scaleX(-1);
+      z-index: 3;
+      opacity: 0.82;
+      background: #0b1224;
+    }
+
+    #game {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: clamp(var(--space-3), 2vw, var(--space-6));
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--space-4);
+      flex-wrap: wrap;
+    }
+
+    .panel {
+      pointer-events: auto;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand { padding: var(--space-4) var(--space-5); max-width: min(34rem, 100%); }
+    .eyebrow {
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: var(--text-xs);
+      margin-bottom: var(--space-2);
+    }
+    h1 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      letter-spacing: -0.03em;
+      line-height: 1.02;
+    }
+    .meta { margin-top: var(--space-2); color: var(--color-text-muted); font-size: var(--text-sm); max-width: 52ch; }
+
+    .hud {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--space-3);
+      padding: var(--space-4);
+      min-width: min(30rem, 100%);
+    }
+    .stat {
+      padding: var(--space-3);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius-lg);
+    }
+    .label { color: var(--color-text-muted); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.14em; }
+    .value { margin-top: 0.2rem; font-size: var(--text-lg); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+    .guide {
+      padding: var(--space-4) var(--space-5);
+      max-width: min(32rem, 100%);
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+      line-height: 1.55;
+    }
+    .guide strong { color: var(--color-text); }
+
+    .actions { display: flex; gap: var(--space-3); flex-wrap: wrap; padding: var(--space-4); }
+    button {
+      pointer-events: auto;
+      min-height: 44px;
+      padding: 0.8rem 1rem;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--color-border);
+      background: var(--color-surface-2);
+      color: var(--color-text);
+      font: inherit;
+      cursor: pointer;
+      transition: transform var(--transition), background var(--transition), border-color var(--transition);
+    }
+    button:hover, button:focus-visible {
+      outline: none;
+      transform: translateY(-1px);
+      background: rgba(123, 194, 255, 0.14);
+      border-color: rgba(123, 194, 255, 0.28);
+    }
+    .primary { background: var(--color-primary); color: #04101f; border-color: transparent; font-weight: 700; }
+    .primary:hover, .primary:focus-visible { background: #98d2ff; }
+
+    .centerMessage {
+      position: absolute;
+      inset: 50% auto auto 50%;
+      transform: translate(-50%, -50%);
+      z-index: 5;
+      text-align: center;
+      background: rgba(8, 14, 28, 0.76);
+      border: 1px solid var(--color-border);
+      border-radius: 1.25rem;
+      padding: 1.25rem 1.4rem;
+      max-width: min(28rem, calc(100vw - 2rem));
+      box-shadow: var(--shadow-lg);
+      backdrop-filter: blur(14px);
+    }
+    .centerMessage[hidden] { display: none; }
+    .centerMessage h2 { margin: 0 0 0.5rem; font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.4rem); }
+    .centerMessage p { margin: 0; color: var(--color-text-muted); }
+
+    @media (max-width: 900px) {
+      .row { flex-direction: column; }
+      .hud { grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; }
+      .actions { width: 100%; }
+      .actions button { flex: 1 1 10rem; }
+      video { width: min(38vw, 200px); }
+    }
+
+    @media (max-width: 560px) {
+      .hud { grid-template-columns: 1fr 1fr; }
+      video { width: 42vw; bottom: 0.75rem; right: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="game"></canvas>
+  <video id="vid" playsinline muted></video>
+
+  <div class="overlay">
+    <div class="row">
+      <section class="panel brand">
+        <div class="eyebrow">Hand-controlled defense</div>
+        <h1>ROCKET GUARD</h1>
+        <p class="meta">Move your index finger left and right in front of the camera. The rocket follows your hand automatically. Survive the asteroid field and protect the mission.</p>
+      </section>
+
+      <section class="panel hud" aria-label="Game stats">
+        <div class="stat"><div class="label">Score</div><div class="value" id="score">0</div></div>
+        <div class="stat"><div class="label">Lives</div><div class="value" id="lives">3</div></div>
+        <div class="stat"><div class="label">Level</div><div class="value" id="level">1</div></div>
+        <div class="stat"><div class="label">Status</div><div class="value" id="status">Scanning</div></div>
+      </section>
+    </div>
+
+    <div class="row">
+      <section class="panel guide">
+        <strong>How to play:</strong> show one hand to the camera and keep your index finger visible. Move your finger left or right to steer the rocket. Avoid the falling asteroids. No keyboard is needed for movement. Tap restart only after game over or if camera tracking stops.
+      </section>
+
+      <section class="panel actions">
+        <button id="restartBtn" class="primary" type="button">Restart mission</button>
+      </section>
+    </div>
+  </div>
+
+  <div id="message" class="centerMessage">
+    <h2>Show your hand</h2>
+    <p>Keep one hand in view and extend your index finger to start flying.</p>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
+    const vid = document.getElementById('vid');
+    const scoreEl = document.getElementById('score');
+    const livesEl = document.getElementById('lives');
+    const levelEl = document.getElementById('level');
+    const statusEl = document.getElementById('status');
+    const messageEl = document.getElementById('message');
+    const restartBtn = document.getElementById('restartBtn');
+
+    let cw = 0;
+    let ch = 0;
+    let score = 0;
+    let lives = 3;
+    let level = 1;
+    let gameOver = false;
+    let started = false;
+    let handVisible = false;
+    let smoothedTargetX = null;
+    let stars = [];
+    let particles = [];
+    let asteroids = [];
+    let lastSpawn = 0;
+    let spawnGap = 950;
+    let lastTime = 0;
+
+    const rocket = {
+      x: 0,
+      y: 0,
+      width: 48,
+      height: 78,
+      glow: 0
+    };
+
+    function resize() {
+      cw = canvas.width = window.innerWidth;
+      ch = canvas.height = window.innerHeight;
+      if (!stars.length) {
+        for (let i = 0; i < 140; i++) {
+          stars.push({ x: Math.random() * cw, y: Math.random() * ch, r: Math.random() * 1.8 + 0.3, speed: Math.random() * 18 + 10, a: Math.random() * 0.7 + 0.2 });
+        }
+      }
+      rocket.x = cw / 2;
+      rocket.y = ch - 120;
+    }
+
+    function resetGame() {
+      score = 0;
+      lives = 3;
+      level = 1;
+      gameOver = false;
+      started = false;
+      asteroids = [];
+      particles = [];
+      spawnGap = 950;
+      lastSpawn = 0;
+      rocket.x = cw / 2;
+      rocket.y = ch - 120;
+      updateHud();
+      showMessage('Show your hand', 'Keep one hand in view and extend your index finger to start flying.');
+    }
+
+    function updateHud() {
+      scoreEl.textContent = String(score);
+      livesEl.textContent = String(lives);
+      levelEl.textContent = String(level);
+      statusEl.textContent = gameOver ? 'Destroyed' : handVisible ? 'Tracking' : 'Scanning';
+    }
+
+    function showMessage(title, text) {
+      messageEl.hidden = false;
+      messageEl.innerHTML = '<h2>' + title + '</h2><p>' + text + '</p>';
+    }
+
+    function hideMessage() {
+      if (!gameOver && started) messageEl.hidden = true;
+    }
+
+    function spawnAsteroid() {
+      const radius = Math.random() * 20 + 18 + level * 1.5;
+      asteroids.push({
+        x: Math.random() * (cw - radius * 2) + radius,
+        y: -radius - 20,
+        r: radius,
+        speed: Math.random() * 1.6 + 2.2 + level * 0.35,
+        drift: (Math.random() - 0.5) * 0.9,
+        spin: (Math.random() - 0.5) * 0.04,
+        angle: Math.random() * Math.PI * 2,
+        seed: Math.random() * 1000
+      });
+    }
+
+    function burst(x, y, color, count) {
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x, y,
+          vx: (Math.random() - 0.5) * 5,
+          vy: (Math.random() - 0.5) * 5,
+          size: Math.random() * 3 + 1,
+          life: Math.random() * 30 + 18,
+          color
+        });
+      }
+    }
+
+    function drawStars(dt) {
+      for (const star of stars) {
+        star.y += star.speed * dt;
+        if (star.y > ch + 4) {
+          star.y = -4;
+          star.x = Math.random() * cw;
+        }
+        ctx.beginPath();
+        ctx.fillStyle = 'rgba(210,225,255,' + star.a + ')';
+        ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function drawNebula() {
+      const g1 = ctx.createRadialGradient(cw * 0.18, ch * 0.16, 20, cw * 0.18, ch * 0.16, cw * 0.35);
+      g1.addColorStop(0, 'rgba(84, 132, 255, 0.18)');
+      g1.addColorStop(1, 'rgba(84, 132, 255, 0)');
+      ctx.fillStyle = g1;
+      ctx.fillRect(0, 0, cw, ch);
+      const g2 = ctx.createRadialGradient(cw * 0.82, ch * 0.24, 20, cw * 0.82, ch * 0.24, cw * 0.28);
+      g2.addColorStop(0, 'rgba(132, 215, 255, 0.12)');
+      g2.addColorStop(1, 'rgba(132, 215, 255, 0)');
+      ctx.fillStyle = g2;
+      ctx.fillRect(0, 0, cw, ch);
+    }
+
+    function drawRocket() {
+      ctx.save();
+      ctx.translate(rocket.x, rocket.y);
+      ctx.shadowColor = 'rgba(123, 194, 255, 0.45)';
+      ctx.shadowBlur = 22;
+      ctx.fillStyle = '#d8e6ff';
+      ctx.beginPath();
+      ctx.moveTo(0, -rocket.height / 2);
+      ctx.lineTo(rocket.width / 2, rocket.height / 4);
+      ctx.lineTo(0, rocket.height / 2);
+      ctx.lineTo(-rocket.width / 2, rocket.height / 4);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.fillStyle = '#8cc8ff';
+      ctx.beginPath();
+      ctx.arc(0, -6, 10, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#7b93c9';
+      ctx.beginPath();
+      ctx.moveTo(-rocket.width / 2, rocket.height / 5);
+      ctx.lineTo(-rocket.width / 2 - 10, rocket.height / 2 - 4);
+      ctx.lineTo(-6, rocket.height / 4 + 8);
+      ctx.closePath();
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(rocket.width / 2, rocket.height / 5);
+      ctx.lineTo(rocket.width / 2 + 10, rocket.height / 2 - 4);
+      ctx.lineTo(6, rocket.height / 4 + 8);
+      ctx.closePath();
+      ctx.fill();
+
+      const flameLen = 18 + Math.sin(rocket.glow) * 8;
+      const flame = ctx.createLinearGradient(0, rocket.height / 3, 0, rocket.height / 2 + flameLen);
+      flame.addColorStop(0, 'rgba(255, 211, 111, 0.95)');
+      flame.addColorStop(1, 'rgba(255, 110, 74, 0.12)');
+      ctx.fillStyle = flame;
+      ctx.beginPath();
+      ctx.moveTo(-8, rocket.height / 3);
+      ctx.quadraticCurveTo(0, rocket.height / 2 + flameLen, 8, rocket.height / 3);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function drawAsteroid(a) {
+      ctx.save();
+      ctx.translate(a.x, a.y);
+      ctx.rotate(a.angle);
+      ctx.fillStyle = '#6f778a';
+      ctx.beginPath();
+      for (let i = 0; i < 7; i++) {
+        const ang = (Math.PI * 2 / 7) * i;
+        const variance = 0.8 + Math.sin(a.seed + i) * 0.15;
+        const px = Math.cos(ang) * a.r * variance;
+        const py = Math.sin(ang) * a.r * variance;
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawParticles(dt) {
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx * dt * 2.4;
+        p.y += p.vy * dt * 2.4;
+        p.life -= dt * 60;
+        if (p.life <= 0) {
+          particles.splice(i, 1);
+          continue;
+        }
+        ctx.fillStyle = p.color.replace('ALPHA', Math.max(0, p.life / 50).toFixed(2));
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function intersects(a) {
+      const rx = rocket.x;
+      const ry = rocket.y + 4;
+      const dx = a.x - rx;
+      const dy = a.y - ry;
+      return Math.hypot(dx, dy) < a.r + 26;
+    }
+
+    function tick(time) {
+      const dt = Math.min(0.04, (time - lastTime) / 1000 || 0.016);
+      lastTime = time;
+      rocket.glow += dt * 12;
+
+      ctx.clearRect(0, 0, cw, ch);
+      drawNebula();
+      drawStars(dt * 60);
+
+      if (handVisible && !gameOver) {
+        started = true;
+        hideMessage();
+      }
+
+      if (started && !gameOver) {
+        if (time - lastSpawn > spawnGap) {
+          spawnAsteroid();
+          lastSpawn = time;
+          if (spawnGap > 340) spawnGap -= 6;
+        }
+
+        for (let i = asteroids.length - 1; i >= 0; i--) {
+          const a = asteroids[i];
+          a.y += a.speed * dt * 60;
+          a.x += a.drift * dt * 60;
+          a.angle += a.spin;
+          drawAsteroid(a);
+
+          if (intersects(a)) {
+            burst(a.x, a.y, 'rgba(255,139,106,ALPHA)', 24);
+            asteroids.splice(i, 1);
+            lives -= 1;
+            updateHud();
+            if (lives <= 0) {
+              gameOver = true;
+              statusEl.textContent = 'Destroyed';
+              showMessage('Mission failed', 'Your rocket was hit by too many asteroids. Press restart mission to try again.');
+            }
+            continue;
+          }
+
+          if (a.y - a.r > ch + 20) {
+            asteroids.splice(i, 1);
+            score += 10;
+            level = Math.max(1, 1 + Math.floor(score / 120));
+            burst(a.x, ch - 18, 'rgba(123,194,255,ALPHA)', 8);
+            updateHud();
+          }
+        }
+      }
+
+      drawRocket();
+      drawParticles(dt);
+
+      if (!handVisible && !gameOver) {
+        showMessage('Show your hand', 'Keep one hand in view and extend your index finger to control the rocket.');
+      }
+
+      requestAnimationFrame(tick);
+    }
+
+    function updateRocketFromHand(results) {
+      if (!results.multiHandLandmarks || !results.multiHandLandmarks.length) {
+        handVisible = false;
+        updateHud();
+        return;
+      }
+      const lm = results.multiHandLandmarks[0];
+      const indexTip = lm[8];
+      handVisible = true;
+      const targetX = (1 - indexTip.x) * cw;
+      if (smoothedTargetX === null) smoothedTargetX = targetX;
+      smoothedTargetX += (targetX - smoothedTargetX) * 0.25;
+      rocket.x += (smoothedTargetX - rocket.x) * 0.18;
+      rocket.x = Math.max(44, Math.min(cw - 44, rocket.x));
+      updateHud();
+    }
+
+    restartBtn.addEventListener('click', resetGame);
+    window.addEventListener('resize', resize);
+
+    const hands = new Hands({
+      locateFile: file => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+    });
+
+    hands.setOptions({
+      maxNumHands: 1,
+      modelComplexity: 1,
+      minDetectionConfidence: 0.55,
+      minTrackingConfidence: 0.55
+    });
+
+    hands.onResults(updateRocketFromHand);
+
+    const camera = new Camera(vid, {
+      onFrame: async () => { await hands.send({ image: vid }); },
+      width: 960,
+      height: 540
+    });
+
+    resize();
+    resetGame();
+    requestAnimationFrame(tick);
+
+    camera.start().catch(() => {
+      showMessage('Camera blocked', 'Allow webcam permission, then reload the page to start the mission.');
+      statusEl.textContent = 'Camera off';
+    });
+  </script>
+</body>
+</html>

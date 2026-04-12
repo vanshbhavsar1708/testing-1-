@@ -1,12 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Contact</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact | CreativeCAT</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+:root {
+  --bg: #0a1f44;
+  --card: #112b5c;
+  --line: #2c4f91;
+  --text: #ffffff;
+  --muted: #c9d6ff;
+  --brand: #6ea8ff;
+}
+
+body { margin:0; font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); }
+.wrap { width:min(1100px,92vw); margin:auto; }
+
+header { background:#091a3a; border-bottom:1px solid var(--line); }
+
+.topbar { display:flex; justify-content:space-between; padding:1rem 0; flex-wrap:wrap; }
+
+nav a { color:var(--muted); margin:0 10px; text-decoration:none; font-weight:600; }
+nav a:hover { color:white; }
+
+.card {
+  background:var(--card);
+  padding:1.5rem;
+  border-radius:12px;
+  margin-top:2rem;
+  border:1px solid var(--line);
+}
+
+footer { text-align:center; padding:1rem; border-top:1px solid var(--line); margin-top:2rem; color:var(--muted); }
+</style>
 </head>
+
 <body>
-  <h1>Contact</h1>
-  <p>Email: vanshbhavsar170806@gmail.com</p>
-  <a href="index.html">Back to Home</a>
+
+
+
+<main class="wrap">
+  <div class="card">
+    <h1>Contact Us</h1>
+    <p>For any queries or business inquiries:</p>
+
+    <p>
+      📧 <a href="mailto:vanshbhavsar170806@gmail.com" style="color:#6ea8ff; font-weight:bold;">
+      vanshbhavsar170806@gmail.com
+      </a>
+    </p>
+
+    <p>We usually respond within 24–48 hours.</p>
+  </div>
+</main>
+
+
 </body>
 </html>

@@ -99,6 +99,10 @@
       align-items: stretch;
     }
 
+    .hero + .hero {
+      margin-top: 1.2rem;
+    }
+
     .card {
       background: linear-gradient(155deg, rgba(16, 39, 65, 0.95), rgba(8, 24, 43, 0.95));
       border: 1px solid var(--line);
@@ -186,20 +190,34 @@
 
     .fact strong { color: var(--text); }
 
+    .game-grid {
+      display: grid;
+      gap: 1rem;
+      align-content: start;
+    }
+
     .preview {
       border: 1px solid var(--line);
       border-radius: 16px;
       overflow: hidden;
       background: #05101d;
-      min-height: 420px;
+      min-height: 360px;
     }
 
     .preview iframe {
       width: 100%;
-      height: 420px;
+      height: 320px;
       border: 0;
       display: block;
       background: #000;
+    }
+
+    .preview-actions {
+      padding: 0.7rem 0.95rem;
+      border-top: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.03);
+      display: flex;
+      justify-content: flex-end;
     }
 
     .mini-note {
@@ -236,7 +254,8 @@
 
     @media (max-width: 980px) {
       .hero { grid-template-columns: 1fr; }
-      .preview, .preview iframe { min-height: 360px; height: 360px; }
+      .preview { min-height: 360px; }
+      .preview iframe { height: 290px; }
       .trust { grid-template-columns: 1fr; }
     }
 
@@ -254,7 +273,6 @@
       </a>
       <nav aria-label="Primary">
         <a href="index.html">Home</a>
-        <a href="game.html">Game</a>
         <a href="about.html">About</a>
         <a href="privacy.html">Privacy</a>
         <a href="contact.html">Contact</a>
@@ -285,9 +303,43 @@
         </div>
       </article>
 
-      <section class="preview" aria-label="Game preview">
-        <iframe title="ROCKET-RUSH preview" src="game.html" loading="lazy" allow="fullscreen"></iframe>
-        <p class="mini-note">Tip: Open <a href="game.html" style="color: var(--brand);">game.html</a> for best fullscreen experience.</p>
+      <section class="game-grid" aria-label="Game 1 preview">
+        <article class="preview">
+          <iframe title="ROCKET-RUSH preview" src="game.html" loading="lazy" allow="fullscreen"></iframe>
+          <div class="preview-actions">
+            <a class="btn btn-primary" href="game.html">Play</a>
+          </div>
+          <p class="mini-note">Tip: Open <a href="game.html" style="color: var(--brand);">game.html</a> for best fullscreen experience.</p>
+        </article>
+      </section>
+    </section>
+
+    <section class="hero">
+      <article class="card">
+        <p class="chip">Arcade Slice Game</p>
+        <h1>FRUIT FINGER SMASH</h1>
+        <p class="subtitle">Slice flying fruits in endless mode, build your streak, and chase a higher score with touch or finger tracking controls.</p>
+        <div class="cta">
+          <a class="btn btn-primary" href="game2.html">Play Full Game</a>
+          <a class="btn btn-alt" href="about.html">How It Works</a>
+        </div>
+
+        <div class="facts">
+          <div class="fact"><strong>Controls:</strong> Phone: touch and drag to slice. Laptop: index finger tracking with camera.</div>
+          <div class="fact"><strong>Mode Select:</strong> Pick Phone or Laptop before starting</div>
+          <div class="fact"><strong>Music:</strong> Chill playlist with on/off button</div>
+          <div class="fact"><strong>Goal:</strong> Endless slicing and score streaks</div>
+        </div>
+      </article>
+
+      <section class="game-grid" aria-label="Game 2 preview">
+        <article class="preview">
+          <iframe title="FRUIT FINGER SMASH preview" src="game2.html" loading="lazy" allow="fullscreen"></iframe>
+          <div class="preview-actions">
+            <a class="btn btn-primary" href="game2.html">Play</a>
+          </div>
+          <p class="mini-note">Tip: Open <a href="game2.html" style="color: var(--brand);">game2.html</a> for best fullscreen experience.</p>
+        </article>
       </section>
     </section>
 

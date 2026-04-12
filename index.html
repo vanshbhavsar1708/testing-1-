@@ -7,7 +7,319 @@
   <link rel="preconnect" href="https://api.fontshare.com" />
   <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@500,700&f[]=satoshi@400,500,700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsd<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Play ROCKET-RUSH by CreativeCAT, a fast reflex arcade game by Vansh Bhavsar." />
+  <title>ROCKET-RUSH | CreativeCAT</title>
+<style>
+     :root {
+      --bg: #06111f;
+      --bg-soft: #0f2238;
+      --card: #0f2741;
+      --line: #2f4f70;
+      --text: #ecf5ff;
+      --muted: #b1c6db;
+      --brand: #80c3ff;
+      --accent: #ffd36f;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(128, 195, 255, 0.2), transparent 28%),
+        radial-gradient(circle at 88% 15%, rgba(255, 211, 111, 0.12), transparent 24%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    .wrap { width: min(1100px, 92vw); margin: 0 auto; }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(10px);
+      background: rgba(6, 17, 31, 0.88);
+      border-bottom: 1px solid rgba(128, 195, 255, 0.2);
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.9rem 0;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .brand img {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 600;
+      padding: 0.35rem 0.55rem;
+      border-radius: 8px;
+    }
+
+    nav a:hover,
+    nav a:focus-visible {
+      color: var(--text);
+      background: rgba(128, 195, 255, 0.14);
+      outline: none;
+    }
+
+    main { padding: 2rem 0 3rem; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 1.2rem;
+      align-items: stretch;
+    }
+
+    .card {
+      background: linear-gradient(155deg, rgba(16, 39, 65, 0.95), rgba(8, 24, 43, 0.95));
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 1.2rem;
+      box-shadow: 0 20px 35px rgba(1, 7, 14, 0.35);
+    }
+
+    h1 {
+      margin: 0 0 0.5rem;
+      line-height: 1.1;
+      font-size: clamp(1.9rem, 3.4vw, 2.6rem);
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin-top: 0;
+      margin-bottom: 1rem;
+      max-width: 46ch;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(128, 195, 255, 0.13);
+      color: var(--brand);
+      border: 1px solid rgba(128, 195, 255, 0.25);
+      border-radius: 999px;
+      padding: 0.3rem 0.8rem;
+      font-size: 0.85rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .cta { display: flex; gap: 0.7rem; flex-wrap: wrap; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      min-height: 44px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: 0.65rem 1.1rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--brand);
+      color: #06111f;
+    }
+
+    .btn-primary:hover,
+    .btn-primary:focus-visible {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+      outline: none;
+    }
+
+    .btn-alt {
+      border-color: rgba(128, 195, 255, 0.4);
+      color: var(--text);
+      background: rgba(128, 195, 255, 0.1);
+    }
+
+    .facts {
+      margin-top: 1rem;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.7rem;
+    }
+
+    .fact {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 0.65rem;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    .fact strong { color: var(--text); }
+
+    .preview {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+      background: #05101d;
+      min-height: 420px;
+    }
+
+    .preview iframe {
+      width: 100%;
+      height: 420px;
+      border: 0;
+      display: block;
+      background: #000;
+    }
+
+    .mini-note {
+      margin: 0;
+      padding: 0.7rem 0.95rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+      border-top: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .trust {
+      margin-top: 1.2rem;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.8rem;
+    }
+
+    .trust .card h2 {
+      font-size: 1rem;
+      margin-top: 0;
+      margin-bottom: 0.45rem;
+      color: var(--accent);
+    }
+
+    .trust .card p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+
+    footer {
+      border-top: 1px solid rgba(128, 195, 255, 0.22);
+      padding: 1rem 0 1.5rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero { grid-template-columns: 1fr; }
+      .preview, .preview iframe { min-height: 360px; height: 360px; }
+      .trust { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 620px) {
+      .facts { grid-template-columns: 1fr; }
+    }
+</style>
+</head>
+<body>
+  <header>
+    <div class="wrap topbar">
+      <a class="brand" href="index.html" aria-label="CreativeCAT home">
+        <img src="logo.png" alt="CreativeCAT by Vansh Bhavsar logo" />
+        <span>CreativeCAT by Vansh Bhavsar</span>
+      </a>
+      <nav aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="game.html">Game</a>
+        <a href="about.html">About</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <article class="card">
+        <p class="chip">Arcade Reflex Game</p>
+        <h1>ROCKET-RUSH</h1>
+        <p class="subtitle">Pilot your rocket through shifting asteroid lanes, beat your high score, and challenge your reaction speed. Built for desktop and mobile.</p>
+        <div class="cta">
+          <a class="btn btn-primary" href="game.html">Play Full Game</a>
+          <a class="btn btn-alt" href="about.html">How It Works</a>
+        </div>
+
+        <div class="facts">
+          <div class="fact"><strong>Controls:</strong>Laptop: index finger in front of camera can navigate the rocket.                                                         
+
+        Mobile: touch and drag to navigate rocket </div>
+          <div class="fact"><strong>Screen:</strong> Fullscreen button inside game</div>
+          <div class="fact"><strong>Publisher:</strong> CreativeCAT by Vansh Bhavsar</div>
+          <div class="fact"><strong>Goal:</strong> Survive and keep scoring</div>
+        </div>
+      </article>
+
+      <section class="preview" aria-label="Game preview">
+        <iframe title="ROCKET-RUSH preview" src="game.html" loading="lazy" allow="fullscreen"></iframe>
+        <p class="mini-note">Tip: Open <a href="game.html" style="color: var(--brand);">game.html</a> for best fullscreen experience.</p>
+      </section>
+    </section>
+
+    <section class="trust" aria-label="Policy and trust details">
+      <article class="card">
+        <h2>Original Content</h2>
+        <p>This website and game are original work from the CreativeCAT project and are actively maintained.</p>
+      </article>
+      <article class="card">
+        <h2>Transparent Policies</h2>
+        <p>Privacy, contact, and ownership information are publicly available and easy to review on dedicated pages.</p>
+      </article>
+      <article class="card">
+        <h2>Ad-Ready Structure</h2>
+        <p>Clear navigation, useful content pages, and publisher identity are included to support ad network reviews.</p>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">Copyright 2026 CreativeCAT by Vansh Bhavsar. ROCKET-RUSH is published as a browser game for entertainment and learning.</div>
+  </footer>
+</body>
+</html>
+elivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
   <style>
     :root {

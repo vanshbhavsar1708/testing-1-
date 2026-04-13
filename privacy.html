@@ -1,66 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  
   <link rel="icon" type="image/png" href="favicon.png">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Privacy Policy | CreativeCAT</title>
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-
-:root {
-  --bg: #0a1f44;
-  --card: #112b5c;
-  --line: #2c4f91;
-  --text: #ffffff;
-  --muted: #c9d6ff;
-  --brand: #6ea8ff;
-}
-
-body { margin:0; font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); }
-.wrap { width:min(1100px,92vw); margin:auto; }
-
-header { background:#091a3a; border-bottom:1px solid var(--line); }
-
-.topbar { display:flex; justify-content:space-between; padding:1rem 0; flex-wrap:wrap; }
-
-nav a { color:var(--muted); margin:0 10px; text-decoration:none; font-weight:600; }
-nav a:hover { color:white; }
-
-.card {
-  background:var(--card);
-  padding:1.5rem;
-  border-radius:12px;
-  margin-top:2rem;
-  border:1px solid var(--line);
-}
-
-footer { text-align:center; padding:1rem; border-top:1px solid var(--line); margin-top:2rem; color:var(--muted); }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy | CreativeCAT</title>
+  <style>
+    :root {
+      --bg: #06111f;
+      --line: #2f4f70;
+      --text: #ecf5ff;
+      --muted: #b1c6db;
+      --brand: #80c3ff;
+      --card: #0f2741;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(128, 195, 255, 0.2), transparent 28%),
+        radial-gradient(circle at 88% 15%, rgba(255, 211, 111, 0.12), transparent 24%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    .wrap { width: min(1100px, 92vw); margin: 0 auto; }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(10px);
+      background: rgba(6, 17, 31, 0.88);
+      border-bottom: 1px solid rgba(128, 195, 255, 0.2);
+    }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.9rem 0;
+      flex-wrap: wrap;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .brand img {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 600;
+      padding: 0.35rem 0.55rem;
+      border-radius: 8px;
+    }
+    nav a:hover {
+      color: var(--text);
+      background: rgba(128, 195, 255, 0.14);
+    }
+    main { padding: 2rem 0 3rem; }
+    .card {
+      background: linear-gradient(155deg, rgba(16, 39, 65, 0.95), rgba(8, 24, 43, 0.95));
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 1.2rem;
+      box-shadow: 0 20px 35px rgba(1, 7, 14, 0.35);
+    }
+    h1 { margin-top: 0; }
+    h2 { margin-bottom: 0.4rem; margin-top: 1.1rem; }
+    p { color: var(--muted); margin-top: 0; }
+    footer {
+      border-top: 1px solid rgba(128, 195, 255, 0.22);
+      padding: 1rem 0 1.5rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+  </style>
 </head>
-
 <body>
+  <header>
+    <div class="wrap topbar">
+      <a class="brand" href="index.html" aria-label="CreativeCAT home">
+        <img src="logo.png" alt="CreativeCAT by Vansh Bhavsar logo" />
+        <span>CreativeCAT by Vansh Bhavsar</span>
+      </a>
+      <nav aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="contact.html">Contact</a>
+        <a href="term.html">Terms & Conditions</a>
+      </nav>
+    </div>
+  </header>
 
+  <main class="wrap">
+    <section class="card">
+      <h1>Privacy Policy</h1>
+      <p>We respect your privacy and do not collect personal data directly.</p>
 
+      <h2>Cookies</h2>
+      <p>Cookies may be used for analytics and advertisements.</p>
 
-<main class="wrap">
-  <div class="card">
-    <h1>Privacy Policy</h1>
-    <p>We respect your privacy and do not collect personal data directly.</p>
+      <h2>Third-Party Ads</h2>
+      <p>Google AdSense may use cookies to display relevant ads.</p>
 
-    <h2>Cookies</h2>
-    <p>Cookies may be used for analytics and advertisements.</p>
+      <h2>Game Modes</h2>
+      <p>All games use Standard Mode and Finger Tracking Mode as consistent control options.</p>
 
-    <h2>Third-Party Ads</h2>
-    <p>Google AdSense may use cookies to display relevant ads.</p>
+      <h2>Consent</h2>
+      <p>By using this website, you agree to this privacy policy.</p>
+    </section>
+  </main>
 
-    <h2>Consent</h2>
-    <p>By using this website, you agree to our privacy policy.</p>
-  </div>
-</main>
-
-
+  <footer>
+    <div class="wrap">CreativeCAT by Vansh Bhavsar</div>
+  </footer>
 </body>
 </html>
